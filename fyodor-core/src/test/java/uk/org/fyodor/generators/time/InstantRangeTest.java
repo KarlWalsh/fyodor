@@ -6,7 +6,8 @@ import org.junit.rules.ExpectedException;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.time.ZoneId;
+
+import static java.time.ZoneId.systemDefault;
 
 public class InstantRangeTest {
 
@@ -43,7 +44,7 @@ public class InstantRangeTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("range cannot be in the future because today is the max instant");
 
-        Timekeeper.from(Clock.fixed(Instant.MAX, ZoneId.systemDefault()));
+        Timekeeper.from(Clock.fixed(Instant.MAX, systemDefault()));
 
         InstantRange.inTheFuture();
     }
@@ -53,7 +54,7 @@ public class InstantRangeTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("range cannot be in the past because today is the min instant");
 
-        Timekeeper.from(Clock.fixed(Instant.MIN, ZoneId.systemDefault()));
+        Timekeeper.from(Clock.fixed(Instant.MIN, systemDefault()));
 
         InstantRange.inThePast();
     }

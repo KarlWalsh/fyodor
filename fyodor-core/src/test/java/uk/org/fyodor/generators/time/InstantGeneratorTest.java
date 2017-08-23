@@ -11,6 +11,7 @@ import uk.org.fyodor.range.Range;
 import java.time.*;
 import java.time.temporal.ChronoField;
 
+import static java.time.ZoneId.systemDefault;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.org.fyodor.Sampler.*;
 import static uk.org.fyodor.generators.RDG.instant;
@@ -25,7 +26,7 @@ public final class InstantGeneratorTest {
 
     @After
     public void resetTimekeeper() {
-        Timekeeper.from(Clock.fixed(Instant.now(), ZoneId.systemDefault()));
+        Timekeeper.from(Clock.fixed(Instant.now(), systemDefault()));
     }
 
     @Test

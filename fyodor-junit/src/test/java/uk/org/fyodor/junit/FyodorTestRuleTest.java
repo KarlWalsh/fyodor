@@ -18,8 +18,9 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.junit.runner.Description.createTestDescription;
 import static uk.org.fyodor.generators.RDG.*;
 import static uk.org.fyodor.generators.time.Timekeeper.current;
+import static uk.org.fyodor.generators.time.TimekeeperConfigurer.*;
+import static uk.org.fyodor.junit.FyodorTestRule.from;
 import static uk.org.fyodor.junit.FyodorTestRule.fyodorTestRule;
-import static uk.org.fyodor.junit.FyodorTestRule.withCurrentDateTimeAndZone;
 import static uk.org.fyodor.junit.TimeFactory.Clocks.utcClockOf;
 import static uk.org.fyodor.junit.TimeFactory.Instants.utcInstantOf;
 
@@ -122,9 +123,9 @@ public final class FyodorTestRuleTest {
     @Test
     public void setsDateAndTimeDuringTestAndRevertsWhenTestHasFinished() throws Throwable {
         final LocalDateTime initialDateTime = LocalDateTime.now();
-        Timekeeper.from(utcClockOf(initialDateTime));
+        Timekeeper.from(dateAndTime(initialDateTime));
 
-        FyodorTestRule.withCurrentDateAndTime(localDate().next().atTime(LocalTime.of(10, 11, 12)))
+        from(date(localDate()).atTime(LocalTime.of(10, 11, 12)))
                 .apply(capturingInstant, test(annotatedWith(currentDate(LocalDate.of(2000, 1, 1)))))
                 .evaluate();
 
@@ -138,10 +139,10 @@ public final class FyodorTestRuleTest {
     @Test
     public void doesNotRevertDateAndTimeWhenTestFailsToStartBecauseOfBadDate() throws Throwable {
         final LocalDateTime initialDateTime = LocalDateTime.now();
-        Timekeeper.from(utcClockOf(initialDateTime));
+        Timekeeper.from(dateAndTime(initialDateTime));
 
         try {
-            FyodorTestRule.withCurrentDateAndTime(localDateTime())
+            FyodorTestRule.from(dateAndTime(localDateTime()))
                     .apply(capturingInstant, test(annotatedWith(currentDate("this-is-not-a-valid-date-string"))))
                     .evaluate();
 
@@ -154,10 +155,10 @@ public final class FyodorTestRuleTest {
     @Test
     public void doesNotRevertDateAndTimeWhenTestFailsToStartBecauseOfBadTime() throws Throwable {
         final LocalDateTime initialDateTime = LocalDateTime.now();
-        Timekeeper.from(utcClockOf(initialDateTime));
+        Timekeeper.from(dateAndTime(initialDateTime));
 
         try {
-            FyodorTestRule.withCurrentDateAndTime(localDateTime())
+            FyodorTestRule.from(dateAndTime(localDateTime()))
                     .apply(capturingInstant, test(annotatedWith(currentTime("this-is-not-a-valid-time-string"))))
                     .evaluate();
 
@@ -171,7 +172,7 @@ public final class FyodorTestRuleTest {
     public void classLevelCurrentDateAnnotationOverridesDateGeneratorConstructorArgument() throws Throwable {
         final LocalTime initialTime = LocalTime.of(0, 1, 2);
 
-        FyodorTestRule.withCurrentDateAndTime(localDate().next().atTime(initialTime))
+        from(date(localDate()).atTime(initialTime))
                 .apply(capturingInstant, test(ClassLevelCurrentDateAnnotation.class))
                 .evaluate();
 
@@ -185,7 +186,7 @@ public final class FyodorTestRuleTest {
         final LocalTime initialTime = LocalTime.of(23, 59, 59);
         final LocalDate annotatedDate = LocalDate.of(2011, 2, 2);
 
-        FyodorTestRule.withCurrentDateAndTime(initialDate.atTime(initialTime))
+        from(date(initialDate).atTime(initialTime))
                 .apply(capturingInstant, test(ClassLevelCurrentDateAnnotation.class, annotatedWith(currentDate(annotatedDate))))
                 .evaluate();
 
@@ -198,7 +199,7 @@ public final class FyodorTestRuleTest {
         final LocalDate initialDate = LocalDate.of(2010, 1, 1);
         final LocalTime initialTime = localTime().next();
 
-        FyodorTestRule.withCurrentDateAndTime(initialDate.atTime(initialTime))
+        from(date(initialDate).atTime(initialTime))
                 .apply(capturingInstant, test(ClassLevelCurrentTimeAnnotation.class))
                 .evaluate();
 
@@ -212,7 +213,7 @@ public final class FyodorTestRuleTest {
         final LocalTime initialTime = localTime().next();
         final LocalTime annotatedTime = LocalTime.of(15, 15, 15);
 
-        FyodorTestRule.withCurrentDateAndTime(initialDate.atTime(initialTime))
+        from(date(initialDate).atTime(initialTime))
                 .apply(capturingInstant, test(ClassLevelCurrentTimeAnnotation.class, annotatedWith(currentTime(annotatedTime))))
                 .evaluate();
 
@@ -224,7 +225,7 @@ public final class FyodorTestRuleTest {
     public void classLevelCurrentTimeAnnotationAndMethodLevelCurrentDateAnnotation() throws Throwable {
         final LocalDate annotatedDate = LocalDate.of(2015, 6, 6);
 
-        FyodorTestRule.withCurrentDateAndTime(localDateTime())
+        from(date(localDate()).atTime(localTime()))
                 .apply(capturingInstant, test(ClassLevelCurrentTimeAnnotation.class, annotatedWith(currentDate(annotatedDate))))
                 .evaluate();
 
@@ -236,7 +237,7 @@ public final class FyodorTestRuleTest {
     public void classLevelCurrentDateAnnotationAndMethodLevelCurrentTimeAnnotation() throws Throwable {
         final LocalTime annotatedTime = LocalTime.of(12, 12, 12);
 
-        FyodorTestRule.withCurrentDateAndTime(localDateTime())
+        from(date(localDate()).atTime(localTime()))
                 .apply(capturingInstant, test(ClassLevelCurrentDateAnnotation.class, annotatedWith(currentTime(annotatedTime))))
                 .evaluate();
 
@@ -246,7 +247,7 @@ public final class FyodorTestRuleTest {
 
     @Test
     public void classLevelCurrentDateAndCurrentTimeAnnotations() throws Throwable {
-        FyodorTestRule.withCurrentDateAndTime(localDateTime())
+        from(date(localDate()).atTime(localTime()))
                 .apply(capturingInstant, test(ClassLevelCurrentDateAndCurrentTimeAnnotations.class))
                 .evaluate();
 
@@ -258,7 +259,7 @@ public final class FyodorTestRuleTest {
     public void classLevelCurrentZoneAnnotationOverridesZoneInConstructorArgument() throws Throwable {
         final ZoneId zoneInRule = zoneId().next();
 
-        withCurrentDateTimeAndZone(localDateTime().next().atZone(zoneInRule))
+        from(date(localDate()).atTime(localTime()).atZone(zoneInRule))
                 .apply(capturingZone, test(ClassLevelCurrentZoneAnnotation.class))
                 .evaluate();
 
@@ -270,7 +271,7 @@ public final class FyodorTestRuleTest {
     public void methodLevelCurrentZoneAnnotationOverridesClassLevelAnnotation() throws Throwable {
         final ZoneId methodLevelZone = ZoneId.of("America/Chicago");
 
-        withCurrentDateTimeAndZone(localDateTime().next().atZone(zoneId().next()))
+        from(date(localDate()).atTime(localTime()).atZone(zoneId()))
                 .apply(capturingZone, test(ClassLevelCurrentZoneAnnotation.class, annotatedWith(currentZone(methodLevelZone))))
                 .evaluate();
 
@@ -282,9 +283,9 @@ public final class FyodorTestRuleTest {
     public void withCurrentDateGenerator() throws Throwable {
         final LocalDate initialDate = LocalDate.now();
         final LocalTime initialTime = LocalTime.now();
-        Timekeeper.from(utcClockOf(initialDate.atTime(initialTime)));
+        Timekeeper.from(date(initialDate).atTime(initialTime));
 
-        FyodorTestRule.withCurrentDate(() -> LocalDate.of(2000, 1, 1))
+        from(date(() -> LocalDate.of(2000, 1, 1)))
                 .apply(capturingInstant, test())
                 .evaluate();
 
@@ -296,9 +297,9 @@ public final class FyodorTestRuleTest {
     public void withCurrentDate() throws Throwable {
         final LocalDate initialDate = LocalDate.now();
         final LocalTime initialTime = LocalTime.now();
-        Timekeeper.from(utcClockOf(initialDate.atTime(initialTime)));
+        Timekeeper.from(date(initialDate).atTime(initialTime));
 
-        FyodorTestRule.withCurrentDate(LocalDate.of(2000, 1, 1))
+        from(date(2000, 1, 1))
                 .apply(capturingInstant, test())
                 .evaluate();
 
@@ -315,9 +316,9 @@ public final class FyodorTestRuleTest {
     public void withCurrentTimeGenerator() throws Throwable {
         final LocalDate initialDate = LocalDate.now();
         final LocalTime initialTime = LocalTime.now();
-        Timekeeper.from(utcClockOf(initialDate.atTime(initialTime)));
+        Timekeeper.from(date(initialDate).atTime(initialTime));
 
-        FyodorTestRule.withCurrentTime(() -> LocalTime.of(3, 4, 5))
+        from(time(() -> LocalTime.of(3, 4, 5)))
                 .apply(capturingInstant, test())
                 .evaluate();
 
@@ -334,9 +335,9 @@ public final class FyodorTestRuleTest {
     public void withCurrentTime() throws Throwable {
         final LocalDate initialDate = LocalDate.now();
         final LocalTime initialTime = LocalTime.now();
-        Timekeeper.from(utcClockOf(initialDate.atTime(initialTime)));
+        Timekeeper.from(date(initialDate).atTime(initialTime));
 
-        FyodorTestRule.withCurrentTime(LocalTime.of(23, 59, 59))
+        from(time(23, 59, 59))
                 .apply(capturingInstant, test())
                 .evaluate();
 
@@ -353,9 +354,10 @@ public final class FyodorTestRuleTest {
     public void withCurrentDateAndTimeGenerator() throws Throwable {
         final LocalDate initialDate = LocalDate.now();
         final LocalTime initialTime = LocalTime.now();
-        Timekeeper.from(utcClockOf(initialDate.atTime(initialTime)));
+        Timekeeper.from(date(initialDate).atTime(initialTime));
 
-        FyodorTestRule.withCurrentDateAndTime(() -> LocalDateTime.of(1999, 12, 31, 23, 59, 59))
+        from(date(() -> LocalDate.of(1999, 12, 31))
+                .atTime(() -> LocalTime.of(23, 59, 59)))
                 .apply(capturingInstant, test())
                 .evaluate();
 
@@ -372,9 +374,10 @@ public final class FyodorTestRuleTest {
     public void withCurrentDateAndTime() throws Throwable {
         final LocalDate initialDate = LocalDate.now();
         final LocalTime initialTime = LocalTime.now();
-        Timekeeper.from(utcClockOf(initialDate.atTime(initialTime)));
+        Timekeeper.from(date(initialDate).atTime(initialTime));
 
-        FyodorTestRule.withCurrentDateAndTime(LocalDateTime.of(1999, 12, 31, 12, 13, 14))
+        from(date(1999, 12, 31)
+                .atTime(LocalTime.of(12, 13, 14)))
                 .apply(capturingInstant, test())
                 .evaluate();
 
@@ -391,9 +394,9 @@ public final class FyodorTestRuleTest {
     public void fromClock() throws Throwable {
         final LocalDate initialDate = LocalDate.now();
         final LocalTime initialTime = LocalTime.now();
-        Timekeeper.from(utcClockOf(initialDate.atTime(initialTime)));
+        Timekeeper.from(date(initialDate).atTime(initialTime));
 
-        FyodorTestRule.from(utcClockOf(LocalDateTime.of(2000, 1, 1, 0, 0, 0)))
+        from(utcClockOf(LocalDateTime.of(2000, 1, 1, 0, 0, 0)))
                 .apply(capturingInstant, test())
                 .evaluate();
 
@@ -409,7 +412,7 @@ public final class FyodorTestRuleTest {
     @Test
     public void ruleProvidesConfiguredTimeDuringTest() throws Throwable {
         final LocalTime time = LocalTime.of(12, 34, 34);
-        final FyodorTestRule rule = FyodorTestRule.withCurrentTime(time);
+        final FyodorTestRule rule = from(time(time));
 
         final CapturingStatement capturingTimeFromRule = new CapturingStatement<>(() -> rule.current().time());
         rule.apply(capturingTimeFromRule, test()).evaluate();
@@ -420,7 +423,7 @@ public final class FyodorTestRuleTest {
     @Test
     public void ruleProvidesConfiguredDateDuringTest() throws Throwable {
         final LocalDate date = LocalDate.of(1981, 12, 6);
-        final FyodorTestRule rule = FyodorTestRule.withCurrentDate(date);
+        final FyodorTestRule rule = from(date(date));
 
         final CapturingStatement capturingDateFromRule = new CapturingStatement<>(() -> rule.current().date());
         rule.apply(capturingDateFromRule, test()).evaluate();
@@ -431,7 +434,7 @@ public final class FyodorTestRuleTest {
     @Test
     public void ruleProvidesConfiguredDateTimeDuringTest() throws Throwable {
         final LocalDateTime dateTime = LocalDateTime.of(1981, 12, 6, 12, 56, 34);
-        final FyodorTestRule rule = FyodorTestRule.withCurrentDateAndTime(dateTime);
+        final FyodorTestRule rule = from(dateAndTime(dateTime));
 
         final CapturingStatement capturingDateTimeFromRule = new CapturingStatement<>(() -> rule.current().dateTime());
         rule.apply(capturingDateTimeFromRule, test()).evaluate();
@@ -442,7 +445,7 @@ public final class FyodorTestRuleTest {
     @Test
     public void ruleProvidesConfiguredInstantDuringTest() throws Throwable {
         final LocalDateTime dateTime = LocalDateTime.of(1981, 12, 6, 12, 56, 34);
-        final FyodorTestRule rule = FyodorTestRule.withCurrentDateAndTime(dateTime);
+        final FyodorTestRule rule = from(dateAndTime(dateTime));
 
         final CapturingStatement capturingInstantFromRule = new CapturingStatement<>(() -> rule.current().instant());
         rule.apply(capturingInstantFromRule, test()).evaluate();
@@ -453,7 +456,7 @@ public final class FyodorTestRuleTest {
     @Test
     public void ruleProvidesConfiguredClockDuringTest() throws Throwable {
         final Clock clock = utcClockOf(LocalDateTime.of(1981, 12, 6, 12, 56, 34));
-        final FyodorTestRule rule = FyodorTestRule.from(clock);
+        final FyodorTestRule rule = from(clock);
 
         final CapturingStatement capturingClockFromRule = new CapturingStatement<>(() -> rule.current().clock());
         rule.apply(capturingClockFromRule, test()).evaluate();

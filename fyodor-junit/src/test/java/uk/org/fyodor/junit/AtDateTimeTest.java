@@ -8,40 +8,41 @@ import uk.org.fyodor.generators.time.Timekeeper;
 import uk.org.fyodor.testapi.AtDate;
 import uk.org.fyodor.testapi.AtTime;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import static java.time.ZoneOffset.UTC;
+import static java.time.LocalDate.of;
+import static java.time.LocalDateTime.of;
 import static org.junit.Assert.assertTrue;
-import static uk.org.fyodor.generators.RDG.instant;
+import static uk.org.fyodor.generators.RDG.localDateTime;
 import static uk.org.fyodor.generators.RDG.localTime;
-import static uk.org.fyodor.generators.time.InstantRange.now;
+import static uk.org.fyodor.generators.time.LocalDateRange.today;
+import static uk.org.fyodor.generators.time.LocalTimeRange.now;
 import static uk.org.fyodor.generators.time.Timekeeper.current;
-import static uk.org.fyodor.junit.FyodorTestRule.*;
+import static uk.org.fyodor.generators.time.TimekeeperConfigurer.*;
+import static uk.org.fyodor.junit.FyodorTestRule.from;
+import static uk.org.fyodor.junit.FyodorTestRule.fyodorTestRule;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
 import static uk.org.fyodor.junit.TestFailureListener.testFailed;
 import static uk.org.fyodor.junit.TestFinishedListener.testFinished;
 import static uk.org.fyodor.junit.TestStartedListener.testStarted;
-import static uk.org.fyodor.junit.TimeFactory.Clocks.utcClockOf;
-import static uk.org.fyodor.junit.TimeFactory.Instants.utcInstantOf;
 
 @SuppressWarnings("ConstantConditions")
 public final class AtDateTimeTest {
 
-    private static final Reporter<Instant> reporter = reporter();
+    private static final Reporter<LocalDateTime> reporter = reporter();
 
-    private final TestRunner<Instant> testRunner = new TestRunner<>(
-            testStarted(reporter, () -> current().instant()),
-            testFailed(reporter, (failure) -> current().instant()),
-            testFinished(reporter, () -> current().instant()));
+    private final TestRunner<LocalDateTime> testRunner = new TestRunner<>(
+            testStarted(reporter, () -> current().dateTime()),
+            testFailed(reporter, (failure) -> current().dateTime()),
+            testFinished(reporter, () -> current().dateTime()));
 
     @Test
     public void noAnnotationsWithDefaultRule() {
-        final Instant initialDateTime = instant().next();
-        Timekeeper.from(utcClockOf(initialDateTime));
+        final LocalDateTime initialDateTime = localDateTime().next();
+        Timekeeper.from(dateAndTime(initialDateTime));
 
         testRunner
                 .scheduleTest(NoAnnotationsWithDefaultRule.class)
@@ -63,17 +64,15 @@ public final class AtDateTimeTest {
     @Test
     public void timeConfiguredInRule() {
         final LocalDate initialDate = RDG.localDate().next();
-        final Instant initialDateTime = utcInstantOf(initialDate.atTime(localTime().next()));
-        Timekeeper.from(utcClockOf(initialDateTime));
+        final LocalDateTime initialDateTime = initialDate.atTime(localTime().next());
+        Timekeeper.from(dateAndTime(initialDateTime));
 
         testRunner.scheduleTest(RuleConfiguredAtTime.class).run();
 
-        final Report<Instant> report = reporter.reportFor(RuleConfiguredAtTime.class, "first");
-
-        assertThat(report)
+        assertThat(reporter.reportFor(RuleConfiguredAtTime.class, "first"))
                 .didNotFail()
                 .beforeTestStarts(initialDateTime)
-                .duringTest(initialDate.atTime(10, 30, 45).toInstant(UTC))
+                .duringTest(initialDate.atTime(10, 30, 45))
                 .whenTestHasFinished(initialDateTime);
     }
 
@@ -81,54 +80,50 @@ public final class AtDateTimeTest {
     public void dateConfiguredInRule() {
         final LocalDate initialDate = RDG.localDate().next();
         final LocalTime initialTime = RDG.localTime().next();
-        final Instant initialDateTime = utcInstantOf(initialDate.atTime(initialTime));
-        Timekeeper.from(utcClockOf(initialDateTime));
+        final LocalDateTime initialDateTime = initialDate.atTime(initialTime);
+        Timekeeper.from(dateAndTime(initialDateTime));
 
         testRunner.scheduleTest(RuleConfiguredWithDate.class).run();
 
-        final Report<Instant> report = reporter.reportFor(RuleConfiguredWithDate.class, "first");
-
-        assertThat(report)
+        assertThat(reporter.reportFor(RuleConfiguredWithDate.class, "first"))
                 .didNotFail()
                 .beforeTestStarts(initialDateTime)
-                .duringTest(LocalDate.of(1999, 12, 31).atTime(initialTime).toInstant(UTC))
+                .duringTest(of(1999, 12, 31).atTime(initialTime))
                 .whenTestHasFinished(initialDateTime);
     }
 
     @Test
     public void dateAndTimeConfiguredInRule() {
-        final Instant initialDateTime = RDG.instant().next();
-        Timekeeper.from(utcClockOf(initialDateTime));
+        final LocalDateTime initialDateTime = localDateTime().next();
+        Timekeeper.from(dateAndTime(initialDateTime));
 
         testRunner.scheduleTest(RuleConfiguredWithDateAndTime.class).run();
 
-        final Report<Instant> report = reporter.reportFor(RuleConfiguredWithDateAndTime.class, "first");
-
-        assertThat(report)
+        assertThat(reporter.reportFor(RuleConfiguredWithDateAndTime.class, "first"))
                 .didNotFail()
                 .beforeTestStarts(initialDateTime)
-                .duringTest(LocalDateTime.of(1999, 12, 31, 23, 59, 59).toInstant(UTC))
+                .duringTest(of(1999, 12, 31, 23, 59, 59))
                 .whenTestHasFinished(initialDateTime);
     }
 
 
     @Test
     public void resetsBackToPreviousDateAndTimeAfterEachTestMethod() {
-        final Instant now = RDG.instant().next();
-        Timekeeper.from(utcClockOf(now));
+        final LocalDateTime now = localDateTime().next();
+        Timekeeper.from(dateAndTime(now));
 
         testRunner.scheduleTest(DateAndTimeConfiguredInAnnotationsAndRule.class).run();
 
         assertThat(reporter.reportFor(DateAndTimeConfiguredInAnnotationsAndRule.class, "annotatedClass"))
                 .didNotFail()
                 .beforeTestStarts(now)
-                .duringTest(LocalDateTime.of(2010, 1, 1, 12, 0, 0).toInstant(UTC))
+                .duringTest(of(2010, 1, 1, 12, 0, 0))
                 .whenTestHasFinished(now);
 
         assertThat(reporter.reportFor(DateAndTimeConfiguredInAnnotationsAndRule.class, "annotatedMethod"))
                 .didNotFail()
                 .beforeTestStarts(now)
-                .duringTest(LocalDateTime.of(2015, 6, 15, 17, 1, 30).toInstant(UTC))
+                .duringTest(of(2015, 6, 15, 17, 1, 30))
                 .whenTestHasFinished(now);
     }
 
@@ -142,12 +137,12 @@ public final class AtDateTimeTest {
 
         @Test
         public void first() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), instant(now()).next());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDateTime().next());
         }
 
         @Test
         public void second() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), instant(now()).next());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDateTime().next());
         }
     }
 
@@ -163,12 +158,12 @@ public final class AtDateTimeTest {
 
         @Test
         public void greenTest() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), instant(now()).next());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDateTime(today(), now()).next());
         }
 
         @Test
         public void redTest() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), instant(now()).next());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDateTime(today(), now()).next());
             assertTrue(false);
         }
     }
@@ -177,42 +172,44 @@ public final class AtDateTimeTest {
     public static final class RuleConfiguredAtTime {
 
         @Rule
-        public final FyodorTestRule rule = withCurrentTime(LocalTime.of(10, 30, 45));
+        public final FyodorTestRule rule = from(time(10, 30, 45));
 
         @Rule
         public final TestName testName = new TestName();
 
         @Test
         public void first() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), instant(now()).next());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDateTime(today(), now()).next());
         }
     }
 
     public static final class RuleConfiguredWithDate {
 
         @Rule
-        public final FyodorTestRule rule = withCurrentDate(LocalDate.of(1999, 12, 31));
+        public final FyodorTestRule rule = from(date(1999, 12, 31));
 
         @Rule
         public final TestName testName = new TestName();
 
         @Test
         public void first() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), instant(now()).next());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDateTime(today(), now()).next());
         }
     }
 
     public static final class RuleConfiguredWithDateAndTime {
 
         @Rule
-        public final FyodorTestRule rule = withCurrentDateAndTime(LocalDateTime.of(1999, 12, 31, 23, 59, 59));
+        public final FyodorTestRule rule = from(dateAndTime(
+                1999, 12, 31,
+                23, 59, 59));
 
         @Rule
         public final TestName testName = new TestName();
 
         @Test
         public void first() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), instant(now()).next());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDateTime(today(), now()).next());
         }
     }
 
@@ -221,21 +218,23 @@ public final class AtDateTimeTest {
     public static final class DateAndTimeConfiguredInAnnotationsAndRule {
 
         @Rule
-        public final FyodorTestRule rule = withCurrentDateAndTime(LocalDateTime.of(1999, 12, 31, 23, 59, 59));
+        public final FyodorTestRule rule = from(dateAndTime(
+                1999, 12, 31,
+                23, 59, 59));
 
         @Rule
         public final TestName testName = new TestName();
 
         @Test
         public void annotatedClass() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), instant(now()).next());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDateTime(today(), now()).next());
         }
 
         @Test
         @AtDate("2015-06-15")
         @AtTime("17:01:30")
         public void annotatedMethod() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), instant(now()).next());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDateTime(today(), now()).next());
         }
     }
 }

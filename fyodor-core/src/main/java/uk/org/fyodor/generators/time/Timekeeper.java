@@ -13,6 +13,10 @@ public final class Timekeeper {
     private Timekeeper() {
     }
 
+    public static void from(final TimekeeperConfigurer timekeeperConfigurer) {
+        from(timekeeperConfigurer.asClock());
+    }
+
     public static void from(final Clock clock) {
         temporalities.get().next(temporalityFrom(clock));
     }

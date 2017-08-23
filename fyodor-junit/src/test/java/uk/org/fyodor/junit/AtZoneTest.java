@@ -13,15 +13,14 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import static java.time.Clock.fixed;
-import static uk.org.fyodor.generators.RDG.localDateTime;
 import static uk.org.fyodor.generators.time.Timekeeper.current;
+import static uk.org.fyodor.generators.time.TimekeeperConfigurer.zone;
 import static uk.org.fyodor.junit.FyodorTestRule.from;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
 import static uk.org.fyodor.junit.TestFailureListener.testFailed;
 import static uk.org.fyodor.junit.TestFinishedListener.testFinished;
 import static uk.org.fyodor.junit.TestStartedListener.testStarted;
-import static uk.org.fyodor.junit.TimeFactory.Clocks.clockOf;
 
 @SuppressWarnings("ConstantConditions")
 public final class AtZoneTest {
@@ -36,7 +35,7 @@ public final class AtZoneTest {
     @Test
     public void noAnnotationsWithDefaultRule() {
         final ZoneId initialZone = zoneId().next();
-        Timekeeper.from(clockOf(localDateTime().next().atZone(initialZone)));
+        Timekeeper.from(zone(initialZone));
 
         testRunner.scheduleTest(NoAnnotationsWithDefaultRule.class).run();
 
@@ -56,7 +55,7 @@ public final class AtZoneTest {
     @Test
     public void zoneConfiguredWithRule() {
         final ZoneId initialZone = zoneId().next();
-        Timekeeper.from(clockOf(localDateTime().next().atZone(initialZone)));
+        Timekeeper.from(zone(initialZone));
 
         testRunner.scheduleTest(NoAnnotationsWithConfiguredRule.class).run();
 
@@ -76,7 +75,7 @@ public final class AtZoneTest {
     @Test
     public void annotatedTestMethods() {
         final ZoneId initialZone = zoneId().next();
-        Timekeeper.from(clockOf(localDateTime().next().atZone(initialZone)));
+        Timekeeper.from(zone(initialZone));
 
         testRunner.scheduleTest(AtZoneMethodAnnotation.class).run();
 
@@ -96,7 +95,7 @@ public final class AtZoneTest {
     @Test
     public void testFailsWhenZoneIdIsNotValid() {
         final ZoneId initialZone = zoneId().next();
-        Timekeeper.from(clockOf(localDateTime().next().atZone(initialZone)));
+        Timekeeper.from(zone(initialZone));
 
         testRunner.scheduleTest(BadZoneId.class).run();
 

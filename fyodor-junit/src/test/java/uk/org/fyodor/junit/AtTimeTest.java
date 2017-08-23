@@ -13,12 +13,13 @@ import static java.time.LocalTime.of;
 import static uk.org.fyodor.generators.RDG.localTime;
 import static uk.org.fyodor.generators.time.LocalTimeRange.now;
 import static uk.org.fyodor.generators.time.Timekeeper.current;
+import static uk.org.fyodor.generators.time.TimekeeperConfigurer.time;
+import static uk.org.fyodor.junit.FyodorTestRule.from;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
 import static uk.org.fyodor.junit.TestFailureListener.testFailed;
 import static uk.org.fyodor.junit.TestFinishedListener.testFinished;
 import static uk.org.fyodor.junit.TestStartedListener.testStarted;
-import static uk.org.fyodor.junit.TimeFactory.Clocks.utcClockOf;
 
 @SuppressWarnings("ConstantConditions")
 public final class AtTimeTest {
@@ -33,7 +34,7 @@ public final class AtTimeTest {
     @Test
     public void noAnnotationsAndDefaultRule() {
         final LocalTime initialTime = localTime().next();
-        Timekeeper.from(utcClockOf(initialTime));
+        Timekeeper.from(time(initialTime));
 
         testRunner.scheduleTest(NoAnnotationsAndDefaultRule.class).run();
 
@@ -53,7 +54,7 @@ public final class AtTimeTest {
     @Test
     public void timeConfiguredWithRule() {
         final LocalTime initialTime = localTime().next();
-        Timekeeper.from(utcClockOf(initialTime));
+        Timekeeper.from(time(initialTime));
 
         testRunner.scheduleTest(NoAnnotationsAndConfiguredRule.class).run();
 
@@ -67,7 +68,7 @@ public final class AtTimeTest {
     @Test
     public void annotatedTestMethods() {
         final LocalTime now = localTime().next();
-        Timekeeper.from(utcClockOf(now));
+        Timekeeper.from(time(now));
 
         testRunner.scheduleTest(AtTimeMethodAnnotation.class).run();
 
@@ -87,8 +88,7 @@ public final class AtTimeTest {
     @Test
     public void testFailsWhenTimeStringCannotBeParsed() {
         final LocalTime initialTime = localTime().next();
-
-        Timekeeper.from(utcClockOf(initialTime));
+        Timekeeper.from(time(initialTime));
 
         testRunner.scheduleTest(BadTimeString.class).run();
 
@@ -153,7 +153,7 @@ public final class AtTimeTest {
     public static final class NoAnnotationsAndConfiguredRule {
 
         @Rule
-        public final FyodorTestRule rule = FyodorTestRule.withCurrentTime(of(10, 30, 45));
+        public final FyodorTestRule rule = from(time(10, 30, 45));
 
         @Rule
         public final TestName testName = new TestName();

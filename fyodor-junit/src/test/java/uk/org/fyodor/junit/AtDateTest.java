@@ -13,12 +13,13 @@ import static java.time.LocalDate.of;
 import static uk.org.fyodor.generators.RDG.localDate;
 import static uk.org.fyodor.generators.time.LocalDateRange.today;
 import static uk.org.fyodor.generators.time.Timekeeper.current;
+import static uk.org.fyodor.generators.time.TimekeeperConfigurer.date;
+import static uk.org.fyodor.junit.FyodorTestRule.from;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
 import static uk.org.fyodor.junit.TestFailureListener.testFailed;
 import static uk.org.fyodor.junit.TestFinishedListener.testFinished;
 import static uk.org.fyodor.junit.TestStartedListener.testStarted;
-import static uk.org.fyodor.junit.TimeFactory.Clocks.utcClockOf;
 
 @SuppressWarnings("ConstantConditions")
 public final class AtDateTest {
@@ -33,7 +34,7 @@ public final class AtDateTest {
     @Test
     public void noAnnotationsWithDefaultRule() {
         final LocalDate initialDate = localDate().next();
-        Timekeeper.from(utcClockOf(initialDate));
+        Timekeeper.from(date(initialDate));
 
         testRunner.scheduleTest(NoAnnotationsWithDefaultRule.class).run();
 
@@ -53,7 +54,7 @@ public final class AtDateTest {
     @Test
     public void dateConfiguredWithRule() {
         final LocalDate initialDate = localDate().next();
-        Timekeeper.from(utcClockOf(initialDate));
+        Timekeeper.from(date(initialDate));
 
         testRunner.scheduleTest(NoAnnotationsWithConfiguredRule.class).run();
 
@@ -73,7 +74,7 @@ public final class AtDateTest {
     @Test
     public void annotatedTestMethods() {
         final LocalDate today = localDate().next();
-        Timekeeper.from(utcClockOf(today));
+        Timekeeper.from(date(today));
 
         testRunner.scheduleTest(AtDateMethodAnnotation.class).run();
 
@@ -93,7 +94,7 @@ public final class AtDateTest {
     @Test
     public void testFailsWhenDateStringCannotBeParsed() {
         final LocalDate initialDate = localDate().next();
-        Timekeeper.from(utcClockOf(initialDate));
+        Timekeeper.from(date(initialDate));
 
         testRunner.scheduleTest(BadDateString.class).run();
 
@@ -158,7 +159,7 @@ public final class AtDateTest {
     public static final class NoAnnotationsWithConfiguredRule {
 
         @Rule
-        public final FyodorTestRule rule = FyodorTestRule.withCurrentDate(of(1999, 12, 31));
+        public final FyodorTestRule rule = from(date(1999, 12, 31));
 
         @Rule
         public final TestName testName = new TestName();
