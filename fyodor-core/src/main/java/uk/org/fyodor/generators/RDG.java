@@ -123,6 +123,17 @@ public class RDG {
         return () -> ZoneId.of(REGION_BASED_ZONE_ID_GENERATOR.next());
     }
 
+    public static Generator<ZoneOffset> zoneOffset() {
+        return zoneOffset(closed(-18, 18));
+    }
+
+    public static Generator<ZoneOffset> zoneOffset(final Range<Integer> range) {
+        ensure(range.lowerBound() >= -18, format("Lower bound %s must be within the range -18..18", range.lowerBound()));
+        ensure(range.upperBound() <= 18, format("Upper bound %s must be within the range -18..18", range.upperBound()));
+
+        return () -> ZoneOffset.ofHours(integer(range).next());
+    }
+
     public static Generator<Boolean> bool() {
         return BOOLEAN_GENERATOR;
     }
