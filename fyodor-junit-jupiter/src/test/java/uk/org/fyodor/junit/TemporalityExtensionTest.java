@@ -44,12 +44,14 @@ final class TemporalityExtensionTest {
                                        @Current final LocalTime time,
                                        @Current final ZoneId zone,
                                        @Current final LocalDateTime dateTime,
-                                       @Current final ZonedDateTime zonedDateTime) {
+                                       @Current final ZonedDateTime zonedDateTime,
+                                       @Current final Instant instant) {
             final LocalDate expectedDate = initialDate;
             final LocalTime expectedTime = initialTime;
             final ZoneId expectedZone = initialZone;
             final LocalDateTime expectedDateTime = expectedDate.atTime(expectedTime);
             final ZonedDateTime expectedZonedDateTime = expectedDateTime.atZone(expectedZone);
+            final Instant expectedInstant = expectedZonedDateTime.toInstant();
 
             assertEquals(expectedDate, date);
             assertEquals(expectedDate, current().date());
@@ -62,6 +64,8 @@ final class TemporalityExtensionTest {
 
             assertEquals(expectedDateTime, dateTime);
             assertEquals(expectedZonedDateTime, zonedDateTime);
+
+            assertEquals(expectedInstant, instant);
         }
 
         @Test
@@ -71,12 +75,14 @@ final class TemporalityExtensionTest {
             final ZoneId expectedZone = initialZone;
             final LocalDateTime expectedDateTime = expectedDate.atTime(expectedTime);
             final ZonedDateTime expectedZonedDateTime = expectedDateTime.atZone(expectedZone);
+            final Instant expectedInstant = expectedZonedDateTime.toInstant();
 
             assertEquals(expectedDate, temporality.date());
             assertEquals(expectedTime, temporality.time());
             assertEquals(expectedZone, temporality.zone());
             assertEquals(expectedDateTime, temporality.dateTime());
             assertEquals(expectedZonedDateTime, temporality.zonedDateTime());
+            assertEquals(expectedInstant, temporality.instant());
         }
     }
 
@@ -89,12 +95,14 @@ final class TemporalityExtensionTest {
                                               @Current final LocalTime time,
                                               @Current final ZoneId zone,
                                               @Current final LocalDateTime dateTime,
-                                              @Current final ZonedDateTime zonedDateTime) {
+                                              @Current final ZonedDateTime zonedDateTime,
+                                              @Current final Instant instant) {
             final LocalDate expectedDate = LocalDate.of(1999, 12, 31);
             final LocalTime expectedTime = initialTime;
             final ZoneId expectedZone = initialZone;
             final LocalDateTime expectedDateTime = expectedDate.atTime(expectedTime);
             final ZonedDateTime expectedZonedDateTime = expectedDateTime.atZone(expectedZone);
+            final Instant expectedInstant = expectedZonedDateTime.toInstant();
 
             assertEquals(expectedDate, date);
             assertEquals(expectedDate, current().date());
@@ -107,6 +115,8 @@ final class TemporalityExtensionTest {
 
             assertEquals(expectedDateTime, dateTime);
             assertEquals(expectedZonedDateTime, zonedDateTime);
+
+            assertEquals(expectedInstant, instant);
         }
 
         @Test
@@ -114,12 +124,14 @@ final class TemporalityExtensionTest {
                                              @Current final LocalTime time,
                                              @Current final ZoneId zone,
                                              @Current final LocalDateTime dateTime,
-                                             @Current final ZonedDateTime zonedDateTime) {
+                                             @Current final ZonedDateTime zonedDateTime,
+                                             @Current final Instant instant) {
             final LocalDate expectedDate = LocalDate.of(2010, 6, 15);
             final LocalTime expectedTime = initialTime;
             final ZoneId expectedZone = initialZone;
             final LocalDateTime expectedDateTime = expectedDate.atTime(expectedTime);
             final ZonedDateTime expectedZonedDateTime = expectedDateTime.atZone(expectedZone);
+            final Instant expectedInstant = expectedZonedDateTime.toInstant();
 
             assertEquals(expectedDate, date);
             assertEquals(expectedDate, current().date());
@@ -132,6 +144,8 @@ final class TemporalityExtensionTest {
 
             assertEquals(expectedDateTime, dateTime);
             assertEquals(expectedZonedDateTime, zonedDateTime);
+
+            assertEquals(expectedInstant, instant);
         }
     }
 
@@ -144,12 +158,14 @@ final class TemporalityExtensionTest {
                                               @Current final LocalTime time,
                                               @Current final ZoneId zone,
                                               @Current final LocalDateTime dateTime,
-                                              @Current final ZonedDateTime zonedDateTime) {
+                                              @Current final ZonedDateTime zonedDateTime,
+                                              @Current final Instant instant) {
             final LocalDate expectedDate = initialDate;
             final LocalTime expectedTime = LocalTime.of(11, 12, 13);
             final ZoneId expectedZone = initialZone;
             final LocalDateTime expectedDateTime = expectedDate.atTime(expectedTime);
             final ZonedDateTime expectedZonedDateTime = expectedDateTime.atZone(expectedZone);
+            final Instant expectedInstant = expectedZonedDateTime.toInstant();
 
             assertEquals(expectedDate, date);
             assertEquals(expectedDate, current().date());
@@ -162,6 +178,8 @@ final class TemporalityExtensionTest {
 
             assertEquals(expectedDateTime, dateTime);
             assertEquals(expectedZonedDateTime, zonedDateTime);
+
+            assertEquals(expectedInstant, instant);
         }
 
         @Test
@@ -169,12 +187,14 @@ final class TemporalityExtensionTest {
                                              @Current final LocalTime time,
                                              @Current final ZoneId zone,
                                              @Current final LocalDateTime dateTime,
-                                             @Current final ZonedDateTime zonedDateTime) {
+                                             @Current final ZonedDateTime zonedDateTime,
+                                             @Current final Instant instant) {
             final LocalDate expectedDate = initialDate;
             final LocalTime expectedTime = LocalTime.of(23, 59, 59);
             final ZoneId expectedZone = initialZone;
             final LocalDateTime expectedDateTime = expectedDate.atTime(expectedTime);
             final ZonedDateTime expectedZonedDateTime = expectedDateTime.atZone(expectedZone);
+            final Instant expectedInstant = expectedZonedDateTime.toInstant();
 
             assertEquals(expectedDate, date);
             assertEquals(expectedDate, current().date());
@@ -187,6 +207,8 @@ final class TemporalityExtensionTest {
 
             assertEquals(expectedDateTime, dateTime);
             assertEquals(expectedZonedDateTime, zonedDateTime);
+
+            assertEquals(expectedInstant, instant);
         }
     }
 
@@ -199,12 +221,14 @@ final class TemporalityExtensionTest {
                                               @Current final LocalTime time,
                                               @Current final ZoneId zone,
                                               @Current final LocalDateTime dateTime,
-                                              @Current final ZonedDateTime zonedDateTime) {
+                                              @Current final ZonedDateTime zonedDateTime,
+                                              @Current final Instant instant) {
             final LocalDate expectedDate = initialDate;
             final LocalTime expectedTime = initialTime;
             final ZoneId expectedZone = ZoneId.of("America/Chicago");
             final LocalDateTime expectedDateTime = expectedDate.atTime(expectedTime);
             final ZonedDateTime expectedZonedDateTime = expectedDateTime.atZone(expectedZone);
+            final Instant expectedInstant = expectedZonedDateTime.toInstant();
 
             assertEquals(expectedDate, date);
             assertEquals(expectedDate, current().date());
@@ -217,6 +241,8 @@ final class TemporalityExtensionTest {
 
             assertEquals(expectedDateTime, dateTime);
             assertEquals(expectedZonedDateTime, zonedDateTime);
+
+            assertEquals(expectedInstant, instant);
         }
 
         @Test
@@ -224,12 +250,14 @@ final class TemporalityExtensionTest {
                                              @Current final LocalTime time,
                                              @Current final ZoneId zone,
                                              @Current final LocalDateTime dateTime,
-                                             @Current final ZonedDateTime zonedDateTime) {
+                                             @Current final ZonedDateTime zonedDateTime,
+                                             @Current final Instant instant) {
             final LocalDate expectedDate = initialDate;
             final LocalTime expectedTime = initialTime;
             final ZoneId expectedZone = ZoneId.of("Asia/Dhaka");
             final LocalDateTime expectedDateTime = expectedDate.atTime(expectedTime);
             final ZonedDateTime expectedZonedDateTime = expectedDateTime.atZone(expectedZone);
+            final Instant expectedInstant = expectedZonedDateTime.toInstant();
 
             assertEquals(expectedDate, date);
             assertEquals(expectedDate, current().date());
@@ -242,6 +270,8 @@ final class TemporalityExtensionTest {
 
             assertEquals(expectedDateTime, dateTime);
             assertEquals(expectedZonedDateTime, zonedDateTime);
+
+            assertEquals(expectedInstant, instant);
         }
     }
 
@@ -258,12 +288,14 @@ final class TemporalityExtensionTest {
                                                                @Current final LocalTime time,
                                                                @Current final ZoneId zone,
                                                                @Current final LocalDateTime dateTime,
-                                                               @Current final ZonedDateTime zonedDateTime) {
+                                                               @Current final ZonedDateTime zonedDateTime,
+                                                               @Current final Instant instant) {
             final LocalDate expectedDate = LocalDate.of(2000, 1, 1);
             final LocalTime expectedTime = LocalTime.of(12, 1, 55);
             final ZoneId expectedZone = ZoneId.of("Australia/Darwin");
             final LocalDateTime expectedDateTime = expectedDate.atTime(expectedTime);
             final ZonedDateTime expectedZonedDateTime = expectedDateTime.atZone(expectedZone);
+            final Instant expectedInstant = expectedZonedDateTime.toInstant();
 
             assertEquals(expectedDate, date);
             assertEquals(expectedDate, current().date());
@@ -276,6 +308,8 @@ final class TemporalityExtensionTest {
 
             assertEquals(expectedDateTime, dateTime);
             assertEquals(expectedZonedDateTime, zonedDateTime);
+
+            assertEquals(expectedInstant, instant);
         }
 
         @Test
@@ -283,12 +317,14 @@ final class TemporalityExtensionTest {
                                                                          @Current final LocalTime time,
                                                                          @Current final ZoneId zone,
                                                                          @Current final LocalDateTime dateTime,
-                                                                         @Current final ZonedDateTime zonedDateTime) {
+                                                                         @Current final ZonedDateTime zonedDateTime,
+                                                                         @Current final Instant instant) {
             final LocalDate expectedDate = LocalDate.of(1999, 12, 31);
             final LocalTime expectedTime = LocalTime.of(23, 59, 59);
             final ZoneId expectedZone = ZoneId.of("Europe/London");
             final LocalDateTime expectedDateTime = expectedDate.atTime(expectedTime);
             final ZonedDateTime expectedZonedDateTime = expectedDateTime.atZone(expectedZone);
+            final Instant expectedInstant = expectedZonedDateTime.toInstant();
 
             assertEquals(expectedDate, date);
             assertEquals(expectedDate, current().date());
@@ -301,6 +337,8 @@ final class TemporalityExtensionTest {
 
             assertEquals(expectedDateTime, dateTime);
             assertEquals(expectedZonedDateTime, zonedDateTime);
+
+            assertEquals(expectedInstant, instant);
         }
     }
 }

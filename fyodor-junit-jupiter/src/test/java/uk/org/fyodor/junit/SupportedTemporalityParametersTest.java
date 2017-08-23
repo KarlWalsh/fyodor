@@ -48,6 +48,10 @@ final class SupportedTemporalityParametersTest {
         assertThat(resolverSupports(currentZoneId()))
                 .describedAs("@Current on ZoneId parameters is supported")
                 .isTrue();
+
+        assertThat(resolverSupports(currentInstant()))
+                .describedAs("@Current on Instant parameters is supported")
+                .isTrue();
     }
 
     @Test
@@ -66,6 +70,10 @@ final class SupportedTemporalityParametersTest {
 
         assertThat(resolverSupports(unAnnotatedZonedDateTime()))
                 .describedAs("ZonedDateTime parameters without an @Current annotation are not supported")
+                .isFalse();
+
+        assertThat(resolverSupports(unAnnotatedZoneId()))
+                .describedAs("ZoneId parameters without an @Current annotation are not supported")
                 .isFalse();
 
         assertThat(resolverSupports(unAnnotatedZoneId()))
@@ -141,6 +149,9 @@ final class SupportedTemporalityParametersTest {
         public void methodWithCurrentTemporalityParameter(@Current final Temporality parameter) {
         }
 
+        public void methodWithCurrentInstantParameter(final @Current Instant parameter) {
+        }
+
         public void methodWithLocalDateParameter(final LocalDate parameter) {
         }
 
@@ -148,6 +159,9 @@ final class SupportedTemporalityParametersTest {
         }
 
         public void methodWithLocalDateTimeParameter(final LocalDateTime parameter) {
+        }
+
+        public void methodWithInstantParameter(final Instant parameter) {
         }
 
         public void methodWithZonedDateTimeParameter(final ZonedDateTime parameter) {
@@ -194,6 +208,10 @@ final class SupportedTemporalityParametersTest {
             return getParameter("methodWithCurrentZoneIdParameter", ZoneId.class);
         }
 
+        static Parameter currentInstant() {
+            return getParameter("methodWithCurrentInstantParameter", Instant.class);
+        }
+
         static Parameter currentTemporality() {
             return getParameter("methodWithCurrentTemporalityParameter", Temporality.class);
         }
@@ -212,6 +230,10 @@ final class SupportedTemporalityParametersTest {
 
         static Parameter unAnnotatedZonedDateTime() {
             return getParameter("methodWithZonedDateTimeParameter", ZonedDateTime.class);
+        }
+
+        static Parameter unAnnotatedInstant() {
+            return getParameter("methodWithInstantParameter", Instant.class);
         }
 
         static Parameter unAnnotatedZoneId() {

@@ -24,6 +24,7 @@ final class TemporalityParameterResolver implements ParameterResolver {
         put(LocalDateTime.class, () -> current().dateTime());
         put(ZonedDateTime.class, () -> current().zonedDateTime());
         put(ZoneId.class, () -> current().zone());
+        put(Instant.class, () -> current().instant());
         put(Temporality.class, Timekeeper::current);
     }};
 
