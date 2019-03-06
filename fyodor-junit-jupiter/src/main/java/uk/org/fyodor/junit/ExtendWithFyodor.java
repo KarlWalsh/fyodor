@@ -12,8 +12,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @ExtendWith({
         SeedExtension.class,
-        TemporalityExtension.class,
-        SeedParameterResolver.class,
-        TemporalityParameterResolver.class})
+        SeedParameterResolver.class})
 public @interface ExtendWithFyodor {
 }

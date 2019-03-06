@@ -15,12 +15,12 @@ final class SeedExtension implements BeforeTestExecutionCallback, AfterTestExecu
     private final SeededFyodorTestCallback seedCallback = new SeededFyodorTestCallback(seedController());
 
     @Override
-    public void beforeTestExecution(final ExtensionContext extensionContext) throws Exception {
+    public void beforeTestExecution(final ExtensionContext extensionContext) {
         seedCallback.beforeTestExecution(fyodorTestOf(extensionContext));
     }
 
     @Override
-    public void afterTestExecution(final ExtensionContext extensionContext) throws Exception {
+    public void afterTestExecution(final ExtensionContext extensionContext) {
         seedCallback.afterTestExecution(fyodorTestOf(extensionContext));
     }
 

@@ -33,11 +33,6 @@ final class TestRunner<T> {
         return this;
     }
 
-    TestRunner<T> scheduleTest(final Class<?> testClass) {
-        this.startingObjectByTestClass.put(testClass, null);
-        return this;
-    }
-
     void run() {
         for (final Class<?> testClass : startingObjectByTestClass.keySet()) {
             executeTest(testClass);

@@ -21,7 +21,6 @@ import static java.time.ZoneId.getAvailableZoneIds;
 import static java.util.Arrays.asList;
 import static java.util.UUID.nameUUIDFromBytes;
 import static uk.org.fyodor.generators.Validations.*;
-import static uk.org.fyodor.generators.time.Timekeeper.current;
 import static uk.org.fyodor.random.RandomSourceProvider.sourceOfRandomness;
 import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
@@ -99,8 +98,7 @@ public class RDG {
 
     public static Generator<ZonedDateTime> zonedDateTime(final Range<LocalDate> dateRange,
                                                          final Range<LocalTime> timeRange) {
-        final Generator<LocalDateTime> dateTimeGenerator = localDateTime(dateRange, timeRange);
-        return () -> dateTimeGenerator.next().atZone(current().zone());
+        return new ZonedDateTimeGenerator(localDateTime(dateRange, timeRange));
     }
 
     public static Generator<LocalDateTime> localDateTime() {

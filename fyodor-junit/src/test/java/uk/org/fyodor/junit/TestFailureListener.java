@@ -15,7 +15,7 @@ final class TestFailureListener<T> extends RunListener {
     }
 
     @Override
-    public void testFailure(final Failure failure) throws Exception {
+    public void testFailure(final Failure failure) {
         final Description testDescription = failure.getDescription();
         reporter.objectReportedWhenTestFails(
                 testDescription.getTestClass(),

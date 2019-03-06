@@ -7,6 +7,7 @@ import org.junit.rules.TestName;
 import uk.org.fyodor.testapi.FailedWithSeed;
 import uk.org.fyodor.testapi.Seed;
 
+import static org.junit.Assert.fail;
 import static uk.org.fyodor.junit.FyodorTestRule.fyodorTestRule;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
@@ -77,7 +78,7 @@ public final class ConcurrentSeedTest {
         @Test
         public void redTest() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
-            Assert.assertTrue(false);
+            fail();
         }
 
         @Test
@@ -100,7 +101,7 @@ public final class ConcurrentSeedTest {
         @Seed(3891)
         public void redTest() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
-            Assert.assertTrue(false);
+            fail();
         }
 
         @Test
@@ -123,7 +124,7 @@ public final class ConcurrentSeedTest {
         @Seed(9876)
         public void redTest() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
-            Assert.assertTrue(false);
+            fail();
         }
 
         @Test

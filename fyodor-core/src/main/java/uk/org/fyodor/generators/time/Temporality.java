@@ -2,7 +2,7 @@ package uk.org.fyodor.generators.time;
 
 import java.time.*;
 
-public interface Temporality {
+interface Temporality {
     LocalDate date();
 
     LocalTime time();

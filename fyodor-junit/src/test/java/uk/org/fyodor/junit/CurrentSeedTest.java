@@ -9,6 +9,7 @@ import uk.org.fyodor.testapi.Seed;
 import java.util.Random;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static uk.org.fyodor.junit.FyodorTestRule.fyodorTestRule;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
@@ -112,7 +113,7 @@ public final class CurrentSeedTest {
         @Test
         public void redTest() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
-            assertTrue(false);
+            fail();
         }
 
         @Test
@@ -134,7 +135,7 @@ public final class CurrentSeedTest {
         @Seed(3891)
         public void redTest() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
-            assertTrue(false);
+            fail();
         }
 
         @Test
@@ -156,7 +157,7 @@ public final class CurrentSeedTest {
         @Seed(9876)
         public void redTest() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
-            assertTrue(false);
+            fail();
         }
 
         @Test

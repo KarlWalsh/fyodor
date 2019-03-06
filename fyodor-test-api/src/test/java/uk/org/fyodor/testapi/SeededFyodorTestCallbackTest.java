@@ -101,7 +101,7 @@ public final class SeededFyodorTestCallbackTest {
     }
 
     @Test
-    public void throwsFailedWithSeedWhenTestFails() throws Throwable {
+    public void throwsFailedWithSeedWhenTestFails() {
         final long initialSeed = longVal().next();
         final StubSeedController seedController = new StubSeedController(initialSeed);
         final SeededFyodorTestCallback underTest = new SeededFyodorTestCallback(seedController);

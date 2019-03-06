@@ -64,9 +64,6 @@ final class SeedTest {
     @ExtendWithFyodor
     static final class BadConfiguration {
         @Test
-        @AtZone("this-is-not-a-zone")
-        @AtTime("this-is-not-a-time")
-        @AtDate("this-is-not-a-date")
         void test() {
         }
     }

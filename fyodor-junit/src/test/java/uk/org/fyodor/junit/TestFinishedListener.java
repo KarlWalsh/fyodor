@@ -5,7 +5,6 @@ import org.junit.runner.notification.RunListener;
 
 import java.util.function.Supplier;
 
-
 final class TestFinishedListener<T> extends RunListener {
 
     private final Reporter<T> reporter;
@@ -17,7 +16,7 @@ final class TestFinishedListener<T> extends RunListener {
     }
 
     @Override
-    public void testFinished(final Description description) throws Exception {
+    public void testFinished(final Description description) {
         reporter.objectAfterTestFinishes(description.getTestClass(), description.getMethodName(), obtainObject.get());
     }
 
