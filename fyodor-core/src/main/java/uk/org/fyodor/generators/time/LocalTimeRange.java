@@ -5,7 +5,7 @@ import uk.org.fyodor.range.Range;
 import java.time.LocalTime;
 
 import static java.time.LocalTime.*;
-import static uk.org.fyodor.generators.time.Timekeeper.current;
+import static uk.org.fyodor.generators.time.CurrentFyodorClock.current;
 
 public final class LocalTimeRange extends Range<LocalTime> {
 

@@ -24,7 +24,7 @@ public final class LocalTimeGeneratorTest {
 
     @After
     public void resetTimekeeper() {
-        Timekeeper.from(Clock.fixed(Instant.now(), ZoneId.systemDefault()));
+        CurrentFyodorClock.set(FyodorClock.fixed(Instant.now(), ZoneId.systemDefault()));
     }
 
     @Test
@@ -88,7 +88,7 @@ public final class LocalTimeGeneratorTest {
     @Test
     public void now() {
         final LocalTime now = LocalTime.of(12, 54);
-        Timekeeper.from(Clock.fixed(now.atDate(LocalDate.now()).toInstant(ZoneOffset.UTC), ZoneOffset.UTC));
+        CurrentFyodorClock.set(FyodorClock.fixed(now.atDate(LocalDate.now()).toInstant(ZoneOffset.UTC), ZoneOffset.UTC));
 
         assertThat(take(from(localTime(LocalTimeRange.now()))).unique())
                 .containsExactly(now);

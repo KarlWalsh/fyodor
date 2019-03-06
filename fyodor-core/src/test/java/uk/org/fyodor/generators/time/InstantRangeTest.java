@@ -4,9 +4,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+
+import static uk.org.fyodor.generators.time.FyodorClock.fixed;
 
 public class InstantRangeTest {
 
@@ -43,7 +44,7 @@ public class InstantRangeTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("range cannot be in the future because today is the max instant");
 
-        Timekeeper.from(Clock.fixed(Instant.MAX, ZoneId.systemDefault()));
+        CurrentFyodorClock.set(fixed(Instant.MAX, ZoneId.systemDefault()));
 
         InstantRange.inTheFuture();
     }
@@ -53,7 +54,7 @@ public class InstantRangeTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("range cannot be in the past because today is the min instant");
 
-        Timekeeper.from(Clock.fixed(Instant.MIN, ZoneId.systemDefault()));
+        CurrentFyodorClock.set(fixed(Instant.MIN, ZoneId.systemDefault()));
 
         InstantRange.inThePast();
     }

@@ -7,7 +7,6 @@ import uk.org.fyodor.Sampler.*;
 import uk.org.fyodor.generators.Generator;
 import uk.org.fyodor.generators.RDG;
 
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -40,7 +39,7 @@ public final class LocalDateTimeGeneratorTest {
     @Test
     public void futureDateAndFixedTime() {
         final LocalDateTime now = LocalDate.MAX.minusDays(1).atTime(0, 0, 0);
-        Timekeeper.from(Clock.fixed(now.toInstant(UTC), UTC));
+        CurrentFyodorClock.set(FyodorClock.fixed(now.toInstant(UTC), UTC));
 
         final Sample<LocalDateTime> sample = takeFrom(localDateTime(inTheFuture(), fixed(LocalTime.of(23, 59, 59))));
 
@@ -51,7 +50,7 @@ public final class LocalDateTimeGeneratorTest {
     @Test
     public void pastDateAndFixedTime() {
         final LocalDateTime now = LocalDate.MIN.plusDays(1).atTime(12, 0, 0);
-        Timekeeper.from(Clock.fixed(now.toInstant(UTC), UTC));
+        CurrentFyodorClock.set(FyodorClock.fixed(now.toInstant(UTC), UTC));
 
         final Sample<LocalDateTime> sample = takeFrom(localDateTime(inThePast(), fixed(LocalTime.of(23, 59, 59))));
 
@@ -62,7 +61,7 @@ public final class LocalDateTimeGeneratorTest {
     @Test
     public void todayAfterMidday() {
         final LocalDate today = LocalDate.now();
-        Timekeeper.from(Clock.fixed(today.atTime(2, 30, 45).toInstant(UTC), UTC));
+        CurrentFyodorClock.set(FyodorClock.fixed(today.atTime(2, 30, 45).toInstant(UTC), UTC));
 
         final Sample<LocalDateTime> sample = takeFrom(localDateTime(today(), after(LocalTime.of(12, 0, 0))));
 
@@ -81,7 +80,7 @@ public final class LocalDateTimeGeneratorTest {
     @Test
     public void tomorrowBetweenNineAndFive() {
         final LocalDate today = LocalDate.now();
-        Timekeeper.from(Clock.fixed(today.atTime(2, 30, 45).toInstant(UTC), UTC));
+        CurrentFyodorClock.set(FyodorClock.fixed(today.atTime(2, 30, 45).toInstant(UTC), UTC));
 
         final Sample<LocalDateTime> sample = takeFrom(localDateTime(tomorrow(), between(9, 17)));
 

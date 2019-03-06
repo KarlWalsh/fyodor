@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 import static java.time.ZoneOffset.UTC;
-import static uk.org.fyodor.generators.time.Timekeeper.current;
+import static uk.org.fyodor.generators.time.CurrentFyodorClock.current;
 
 public final class InstantRange extends Range<Instant> {
 

@@ -9,7 +9,6 @@ import uk.org.fyodor.generators.Generator;
 import java.time.*;
 import java.util.Set;
 
-import static java.time.Clock.fixed;
 import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.org.fyodor.Sampler.from;
@@ -25,7 +24,7 @@ public final class ZonedDateTimeGeneratorTest {
     public void zoneIsAlwaysTheCurrentTimekeeperZone() {
         final ZoneId currentZone = zoneId().next();
         final LocalDateTime currentDateTime = localDateTime().next();
-        Timekeeper.from(clockOf(currentDateTime.atZone(currentZone)));
+        CurrentFyodorClock.set(FyodorClock.fixed(currentDateTime.atZone(currentZone)));
 
         final Sample<ZonedDateTime> sample = takeFrom(zonedDateTime());
 
@@ -36,7 +35,7 @@ public final class ZonedDateTimeGeneratorTest {
     public void fixedZonedDateTime() {
         final ZoneId currentZone = zoneId().next();
         final LocalDateTime currentDateTime = localDateTime().next();
-        Timekeeper.from(clockOf(currentDateTime.atZone(currentZone)));
+        CurrentFyodorClock.set(FyodorClock.fixed(currentDateTime.atZone(currentZone)));
 
         final LocalDate date = LocalDate.of(1999, 12, 31);
         final LocalTime time = LocalTime.of(23, 59, 59);
@@ -59,10 +58,6 @@ public final class ZonedDateTimeGeneratorTest {
         thrown.expectMessage("time range cannot be null");
 
         zonedDateTime(LocalDateRange.all(), null);
-    }
-
-    private static Clock clockOf(final ZonedDateTime zonedDateTime) {
-        return fixed(zonedDateTime.toInstant(), zonedDateTime.getZone());
     }
 
     private static Sample<ZonedDateTime> takeFrom(final Generator<ZonedDateTime> generatorOfT) {

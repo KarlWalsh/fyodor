@@ -14,6 +14,7 @@ import java.time.temporal.ChronoField;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.org.fyodor.Sampler.*;
 import static uk.org.fyodor.generators.RDG.instant;
+import static uk.org.fyodor.generators.time.FyodorClock.fixed;
 import static uk.org.fyodor.generators.time.InstantRange.*;
 import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
@@ -25,7 +26,7 @@ public final class InstantGeneratorTest {
 
     @After
     public void resetTimekeeper() {
-        Timekeeper.from(Clock.fixed(Instant.now(), ZoneId.systemDefault()));
+        CurrentFyodorClock.set(FyodorClock.fixed(Instant.now(), ZoneId.systemDefault()));
     }
 
     @Test
@@ -74,7 +75,7 @@ public final class InstantGeneratorTest {
 
     @Test
     public void futureInstantUpToAndIncludingMaxToSecondPrecisionOnly() {
-        Timekeeper.from(Clock.fixed(Instant.MAX.minusSeconds(2), ZoneId.systemDefault()));
+        CurrentFyodorClock.set(FyodorClock.fixed(Instant.MAX.minusSeconds(2), ZoneId.systemDefault()));
 
         final Sample<Instant> sample = take(from(instant(inTheFuture())));
 
@@ -85,7 +86,7 @@ public final class InstantGeneratorTest {
 
     @Test
     public void pastInstantDownToAndIncludingMinToSecondPrecisionOnly() {
-        Timekeeper.from(Clock.fixed(Instant.MIN.plusSeconds(2), ZoneId.systemDefault()));
+        CurrentFyodorClock.set(FyodorClock.fixed(Instant.MIN.plusSeconds(2), ZoneId.systemDefault()));
 
         final Sample<Instant> sample = take(from(instant(inThePast())));
 
@@ -97,7 +98,7 @@ public final class InstantGeneratorTest {
     @Test
     public void nowToNanoPrecision() {
         final Instant now = Instant.now();
-        Timekeeper.from(Clock.fixed(now, ZoneId.systemDefault()));
+        CurrentFyodorClock.set(FyodorClock.fixed(now, ZoneId.systemDefault()));
 
         final Sample<Instant> sample = take(from(instant(now())));
 
@@ -110,7 +111,7 @@ public final class InstantGeneratorTest {
         final Instant startOfDay = today.atStartOfDay().toInstant(ZoneOffset.ofHours(0));
         final Instant endOfDay = today.atTime(23, 59, 59).toInstant(ZoneOffset.ofHours(0));
 
-        Timekeeper.from(Clock.fixed(Instant.now(), ZoneId.systemDefault()));
+        CurrentFyodorClock.set(FyodorClock.fixed(Instant.now(), ZoneId.systemDefault()));
 
         final Sample<Instant> sample = from(instant(today())).sample(1_000_000);
 

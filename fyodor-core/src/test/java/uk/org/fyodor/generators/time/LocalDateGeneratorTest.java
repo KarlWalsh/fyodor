@@ -7,10 +7,7 @@ import org.junit.rules.ExpectedException;
 import uk.org.fyodor.Sampler.Sample;
 import uk.org.fyodor.range.Range;
 
-import java.time.Clock;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -22,6 +19,8 @@ import static uk.org.fyodor.Sampler.from;
 import static uk.org.fyodor.Sampler.smallest;
 import static uk.org.fyodor.generators.RDG.localDate;
 import static uk.org.fyodor.generators.time.ChronoAmount.*;
+import static uk.org.fyodor.generators.time.FyodorClock.fixed;
+import static uk.org.fyodor.generators.time.FyodorClock.systemDefault;
 import static uk.org.fyodor.generators.time.LocalDateRange.*;
 import static uk.org.fyodor.range.Range.closed;
 
@@ -32,7 +31,7 @@ public final class LocalDateGeneratorTest {
 
     @After
     public void resetTemporalDataAfterTests() {
-        Timekeeper.from(Clock.systemDefaultZone());
+        CurrentFyodorClock.set(systemDefault());
     }
 
     @Test
@@ -49,7 +48,7 @@ public final class LocalDateGeneratorTest {
         final LocalDate tomorrow = maxLocalDate.minusDays(1);
         final LocalDate today = tomorrow.minusDays(1);
 
-        Timekeeper.from(fixedClock(today));
+        CurrentFyodorClock.set(fixed(today));
 
         final Sample<LocalDate> sample = from(localDate(inTheFuture())).sample(100);
 
@@ -61,7 +60,7 @@ public final class LocalDateGeneratorTest {
         final LocalDate tomorrow = LocalDate.MAX;
         final LocalDate today = tomorrow.minusDays(1);
 
-        Timekeeper.from(fixedClock(today));
+        CurrentFyodorClock.set(fixed(today));
 
         final LocalDate futureDate = localDate(inTheFuture()).next();
 
@@ -76,7 +75,7 @@ public final class LocalDateGeneratorTest {
         final LocalDate yesterday = minLocalDate.plusDays(1);
         final LocalDate today = yesterday.plusDays(1);
 
-        Timekeeper.from(fixedClock(today));
+        CurrentFyodorClock.set(fixed(today));
 
         final Sample<LocalDate> sample = from(localDate(inThePast())).sample(100);
 
@@ -88,7 +87,7 @@ public final class LocalDateGeneratorTest {
         final LocalDate yesterday = LocalDate.MIN;
         final LocalDate today = yesterday.plusDays(1);
 
-        Timekeeper.from(fixedClock(today));
+        CurrentFyodorClock.set(fixed(today));
 
         final LocalDate pastDate = localDate(inThePast()).next();
 
@@ -100,7 +99,7 @@ public final class LocalDateGeneratorTest {
     @Test
     public void fixedLocalDates() {
         final LocalDate fixedDate = LocalDate.now();
-        final Sample<LocalDate> sample = from(localDate(fixed(fixedDate))).sample(100);
+        final Sample<LocalDate> sample = from(localDate(Range.fixed(fixedDate))).sample(100);
 
         assertThat(sample.unique()).containsExactly(fixedDate);
     }
@@ -116,7 +115,7 @@ public final class LocalDateGeneratorTest {
     @Test
     public void fixedDateOfToday() {
         final LocalDate today = randomLocalDate();
-        Timekeeper.from(fixedClock(today));
+        CurrentFyodorClock.set(fixed(today));
 
         final Sample<LocalDate> sample = from(localDate(today())).sample(100);
         assertThat(sample.unique()).containsExactly(today);
@@ -125,7 +124,7 @@ public final class LocalDateGeneratorTest {
     @Test
     public void agedInYears() {
         final LocalDate today = now();
-        Timekeeper.from(fixedClock(today));
+        CurrentFyodorClock.set(fixed(today));
 
         final Sample<LocalDate> sample = from(localDate(aged(closed(years(1), years(2))))).sample(10000);
 
@@ -139,9 +138,9 @@ public final class LocalDateGeneratorTest {
     @Test
     public void agedInYearsFixed() {
         final LocalDate today = now();
-        Timekeeper.from(fixedClock(today));
+        CurrentFyodorClock.set(fixed(today));
 
-        final Sample<LocalDate> sample = from(localDate(aged(fixed(years(7))))).sample(10000);
+        final Sample<LocalDate> sample = from(localDate(aged(Range.fixed(years(7))))).sample(10000);
 
         assertThat(sample.unique()).containsExactly(today.minusYears(7));
     }
@@ -149,7 +148,7 @@ public final class LocalDateGeneratorTest {
     @Test
     public void agedInMonths() {
         final LocalDate today = now();
-        Timekeeper.from(fixedClock(today));
+        CurrentFyodorClock.set(fixed(today));
 
         final Sample<LocalDate> sample = from(localDate(aged(closed(months(6), months(9))))).sample(10000);
 
@@ -163,9 +162,9 @@ public final class LocalDateGeneratorTest {
     @Test
     public void agedInMonthsFixed() {
         final LocalDate today = now();
-        Timekeeper.from(fixedClock(today));
+        CurrentFyodorClock.set(fixed(today));
 
-        final Sample<LocalDate> sample = from(localDate(aged(fixed(months(6))))).sample(10000);
+        final Sample<LocalDate> sample = from(localDate(aged(Range.fixed(months(6))))).sample(10000);
 
         assertThat(sample.unique()).containsExactly(today.minusMonths(6));
     }
@@ -173,7 +172,7 @@ public final class LocalDateGeneratorTest {
     @Test
     public void agedInDays() {
         final LocalDate today = now();
-        Timekeeper.from(fixedClock(today));
+        CurrentFyodorClock.set(fixed(today));
 
         final Sample<LocalDate> sample = from(localDate(aged(closed(days(5), days(15))))).sample(10000);
 
@@ -188,7 +187,7 @@ public final class LocalDateGeneratorTest {
     public void agedInDaysIncludingToday() {
         final LocalDate today = now();
         final LocalDate yesterday = today.minusDays(1);
-        Timekeeper.from(fixedClock(today));
+        CurrentFyodorClock.set(fixed(today));
 
         final Sample<LocalDate> sample = from(localDate(aged(closed(days(0), days(1))))).sample(10000);
 
@@ -199,9 +198,9 @@ public final class LocalDateGeneratorTest {
     public void agedInDaysFixed() {
         final LocalDate today = now();
 
-        Timekeeper.from(fixedClock(today));
+        CurrentFyodorClock.set(fixed(today));
 
-        final Sample<LocalDate> sample = from(localDate(aged(fixed(days(100))))).sample(10000);
+        final Sample<LocalDate> sample = from(localDate(aged(Range.fixed(days(100))))).sample(10000);
 
         assertThat(sample.unique()).containsExactly(today.minusDays(100));
     }
@@ -212,7 +211,7 @@ public final class LocalDateGeneratorTest {
         final LocalDate yesterday = LocalDate.of(2001, 2, 27);
         final LocalDate tomorrow = LocalDate.of(2001, 3, 1);
 
-        Timekeeper.from(fixedClock(today));
+        CurrentFyodorClock.set(fixed(today));
 
         final Sample<LocalDate> sample = from(localDate(closed(yesterday, tomorrow))).sample(100);
 
@@ -225,7 +224,7 @@ public final class LocalDateGeneratorTest {
         final LocalDate yesterday = LocalDate.of(2000, 2, 27);
         final LocalDate tomorrow = LocalDate.of(2000, 2, 29);
 
-        Timekeeper.from(fixedClock(today));
+        CurrentFyodorClock.set(fixed(today));
 
         final Sample<LocalDate> sample = from(localDate(closed(yesterday, tomorrow))).sample(100);
 
@@ -239,7 +238,7 @@ public final class LocalDateGeneratorTest {
         final LocalDate tomorrow = dayAfterTomorrow.minusDays(1);
         final LocalDate today = tomorrow.minusDays(1);
 
-        Timekeeper.from(fixedClock(today));
+        CurrentFyodorClock.set(fixed(today));
 
         final Sample<LocalDate> sample = from(localDate(after(tomorrow))).sample(100);
 
@@ -253,7 +252,7 @@ public final class LocalDateGeneratorTest {
         final LocalDate yesterday = dayBeforeYesterday.plusDays(1);
         final LocalDate today = yesterday.plusDays(1);
 
-        Timekeeper.from(fixedClock(today));
+        CurrentFyodorClock.set(fixed(today));
 
         final Sample<LocalDate> samples = from(localDate(before(yesterday))).sample(100);
 
@@ -276,7 +275,7 @@ public final class LocalDateGeneratorTest {
         final LocalDate tomorrow = now().plusDays(1);
         final LocalDate fixedDate = tomorrow.plusDays(1);
 
-        final Sample<LocalDate> sample = from(localDate(fixed(fixedDate))).sample(100);
+        final Sample<LocalDate> sample = from(localDate(Range.fixed(fixedDate))).sample(100);
 
         assertThat(sample.unique()).containsOnly(fixedDate);
     }
@@ -296,10 +295,6 @@ public final class LocalDateGeneratorTest {
         thrown.expectMessage("date range cannot be null");
 
         localDate((Range<LocalDate>) null);
-    }
-
-    private static Clock fixedClock(final LocalDate today) {
-        return Clock.fixed(today.atTime(12, 0).toInstant(ZoneOffset.UTC), ZoneId.systemDefault());
     }
 
     private static List<LocalDate> datesBetween(final LocalDate start, final LocalDate end) {

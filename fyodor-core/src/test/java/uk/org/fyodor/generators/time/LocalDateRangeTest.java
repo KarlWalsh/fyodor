@@ -5,10 +5,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.time.Clock;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 
 import static java.time.ZoneOffset.UTC;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +21,7 @@ public class LocalDateRangeTest {
     public void tomorrow() {
         final LocalDate today = LocalDate.now();
         final LocalDate tomorrow = today.plusDays(1);
-        Timekeeper.from(Clock.fixed(today.atTime(2, 30, 45).toInstant(UTC), UTC));
+        CurrentFyodorClock.set(FyodorClock.fixed(today.atTime(2, 30, 45).toInstant(UTC), UTC));
 
         final LocalDateRange range = LocalDateRange.tomorrow();
         assertThat(range.lowerBound()).isEqualTo(tomorrow);
@@ -113,7 +110,7 @@ public class LocalDateRangeTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Date range cannot be in the future because today is the maximum date");
 
-        Timekeeper.from(fixedClock(LocalDate.MAX));
+        CurrentFyodorClock.set(FyodorClock.fixed(LocalDate.MAX));
 
         inTheFuture();
     }
@@ -131,14 +128,14 @@ public class LocalDateRangeTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Date range cannot be in the past because today is the minimum date");
 
-        Timekeeper.from(fixedClock(LocalDate.MIN));
+        CurrentFyodorClock.set(FyodorClock.fixed(LocalDate.MIN));
 
         inThePast();
     }
 
     @Test
     public void agedRangeOfZeroDaysWhenTodayIsMinimumLocalDate() {
-        Timekeeper.from(fixedClock(LocalDate.MIN));
+        CurrentFyodorClock.set(FyodorClock.fixed(LocalDate.MIN));
 
         final LocalDateRange range = aged(fixed(days(0)));
 
@@ -151,7 +148,7 @@ public class LocalDateRangeTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Date range cannot be earlier than the minimum date");
 
-        Timekeeper.from(fixedClock(LocalDate.MIN));
+        CurrentFyodorClock.set(FyodorClock.fixed(LocalDate.MIN));
 
         aged(fixed(days(1)));
     }
@@ -161,7 +158,7 @@ public class LocalDateRangeTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Date range cannot be earlier than the minimum date");
 
-        Timekeeper.from(fixedClock(LocalDate.MIN.plusDays(10)));
+        CurrentFyodorClock.set(FyodorClock.fixed(LocalDate.MIN.plusDays(10)));
 
         aged(fixed(days(11)));
     }
@@ -171,12 +168,8 @@ public class LocalDateRangeTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Date range cannot be earlier than the minimum date");
 
-        Timekeeper.from(fixedClock(LocalDate.MIN.plusDays(10)));
+        CurrentFyodorClock.set(FyodorClock.fixed(LocalDate.MIN.plusDays(10)));
 
         aged(closed(days(0), days(11)));
-    }
-
-    private static Clock fixedClock(final LocalDate today) {
-        return Clock.fixed(today.atTime(12, 0).toInstant(ZoneOffset.UTC), ZoneId.systemDefault());
     }
 }

@@ -5,7 +5,7 @@ import uk.org.fyodor.range.Range;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 
-import static uk.org.fyodor.generators.time.Timekeeper.current;
+import static uk.org.fyodor.generators.time.CurrentFyodorClock.current;
 
 public final class LocalDateRange extends Range<LocalDate> {
 
