@@ -5,8 +5,10 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import uk.org.fyodor.generators.time.Temporality;
 import uk.org.fyodor.testapi.Current;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
 import java.time.*;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -108,10 +110,25 @@ final class SupportedTemporalityParametersTest {
             public Optional<Object> getTarget() {
                 return Optional.empty();
             }
+
+            @Override
+            public boolean isAnnotated(final Class<? extends Annotation> aClass) {
+                return false;
+            }
+
+            @Override
+            public <A extends Annotation> Optional<A> findAnnotation(final Class<A> aClass) {
+                return Optional.empty();
+            }
+
+            @Override
+            public <A extends Annotation> List<A> findRepeatableAnnotations(final Class<A> aClass) {
+                return null;
+            }
         };
     }
 
-    @SuppressWarnings({"WeakerAccess", "unused"})
+    @SuppressWarnings({"unused"})
     static final class Parameters {
 
         public void methodWithCurrentStringParameter(@Current final String parameter) {

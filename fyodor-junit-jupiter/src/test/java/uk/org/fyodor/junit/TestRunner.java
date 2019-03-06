@@ -4,7 +4,6 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.model.InitializationError;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,16 +19,8 @@ final class TestRunner {
     TestRunReport run() {
         final TestRunReport report = new TestRunReport();
         final RunCapture runCapture = new RunCapture(report);
-        junitPlatformFor(testClass).run(runCapture);
+        new JUnitPlatform(testClass).run(runCapture);
         return report;
-    }
-
-    private static JUnitPlatform junitPlatformFor(final Class<?> testClass) {
-        try {
-            return new JUnitPlatform(testClass);
-        } catch (final InitializationError initializationError) {
-            throw new RuntimeException(initializationError);
-        }
     }
 
     static TestRunner runnerFor(final Class<?> testClass) {

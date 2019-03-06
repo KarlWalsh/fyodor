@@ -3,7 +3,6 @@ package uk.org.fyodor.junit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runners.model.InitializationError;
 import org.opentest4j.AssertionFailedError;
 import uk.org.fyodor.junit.TestRunner.TestRunReport;
 import uk.org.fyodor.testapi.*;
@@ -49,7 +48,7 @@ final class SeedTest {
     }
 
     @Test
-    void initialSeedIsReportedWhenTestFails() throws InitializationError {
+    void initialSeedIsReportedWhenTestFails() {
         final TestRunReport report = runnerFor(FailingTest.class).run();
 
         assertThat(report.detailsFor(FailingTest.class, "noSeedAnnotation").failure().getException())

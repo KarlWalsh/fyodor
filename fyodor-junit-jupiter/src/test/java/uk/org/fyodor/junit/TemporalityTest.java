@@ -2,7 +2,6 @@ package uk.org.fyodor.junit;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.runners.model.InitializationError;
 import uk.org.fyodor.generators.time.Timekeeper;
 import uk.org.fyodor.junit.TestRunner.TestRunDetails;
 import uk.org.fyodor.junit.TestRunner.TestRunReport;
@@ -32,7 +31,7 @@ final class TemporalityTest {
     @Nested
     final class AtZone {
         @Test
-        void testFailsWhenZoneStringCannotBeParsed() throws InitializationError {
+        void testFailsWhenZoneStringCannotBeParsed() {
             final TestRunReport report = runnerFor(BadZoneString.class).run();
 
             final TestRunDetails testDetails = report.detailsFor(BadZoneString.class, "testWithBadZoneString");
@@ -56,7 +55,7 @@ final class TemporalityTest {
     @Nested
     final class AtTime {
         @Test
-        void testFailsWhenTimeStringCannotBeParsed() throws InitializationError {
+        void testFailsWhenTimeStringCannotBeParsed() {
             final TestRunReport report = runnerFor(BadTimeString.class).run();
 
             final TestRunDetails testDetails = report.detailsFor(BadTimeString.class, "testWithBadTimeString");
@@ -80,7 +79,7 @@ final class TemporalityTest {
     @Nested
     final class AtDate {
         @Test
-        void testFailsWhenDateStringCannotBeParsed() throws InitializationError {
+        void testFailsWhenDateStringCannotBeParsed() {
             final TestRunReport report = runnerFor(BadDateString.class).run();
 
             final TestRunDetails testDetails = report.detailsFor(BadDateString.class, "testWithBadDateString");
