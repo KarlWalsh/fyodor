@@ -1,24 +1,33 @@
 package uk.org.fyodor.generators.time;
 
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 
-public abstract class ChronoAmount implements Comparable<ChronoAmount> {
+public final class ChronoAmount implements Comparable<ChronoAmount> {
 
-    private ChronoAmount() {
+    private final ChronoUnit unit;
+    private final long amount;
+
+    private ChronoAmount(final ChronoUnit unit, final long amount) {
+        this.unit = unit;
+        this.amount = amount;
     }
 
-    abstract long amount();
-
-    abstract ChronoUnit unit();
+    public <R extends Temporal> R subtractFrom(final R temporal) {
+        return unit.addTo(temporal, Math.negateExact(amount));
+    }
 
     @Override
     public final int compareTo(final ChronoAmount that) {
-        if (!this.getClass().equals(that.getClass())) {
-            throw new IllegalArgumentException(this.unit() + " cannot be compared to " + that.unit());
+        final ChronoUnit thisUnit = this.unit;
+        final ChronoUnit thatUnit = that.unit;
+
+        if (!thisUnit.equals(thatUnit)) {
+            throw new IllegalArgumentException(thisUnit + " cannot be compared to " + thatUnit);
         }
 
-        long thatQuantity = that.amount();
-        long thisQuantity = this.amount();
+        long thatQuantity = that.amount;
+        long thisQuantity = this.amount;
 
         if (thisQuantity == thatQuantity) {
             return 0;
@@ -29,48 +38,18 @@ public abstract class ChronoAmount implements Comparable<ChronoAmount> {
 
     @Override
     public final String toString() {
-        return String.format("%s %s", amount(), unit());
+        return String.format("%s %s", amount, unit);
     }
 
     public static ChronoAmount days(final long numberOfDays) {
-        return new ChronoAmount() {
-            @Override
-            public long amount() {
-                return numberOfDays;
-            }
-
-            @Override
-            public ChronoUnit unit() {
-                return ChronoUnit.DAYS;
-            }
-        };
+        return new ChronoAmount(ChronoUnit.DAYS, numberOfDays);
     }
 
     public static ChronoAmount years(final long numberOfYears) {
-        return new ChronoAmount() {
-            @Override
-            public long amount() {
-                return numberOfYears;
-            }
-
-            @Override
-            public ChronoUnit unit() {
-                return ChronoUnit.YEARS;
-            }
-        };
+        return new ChronoAmount(ChronoUnit.YEARS, numberOfYears);
     }
 
     public static ChronoAmount months(final long numberOfMonths) {
-        return new ChronoAmount() {
-            @Override
-            public long amount() {
-                return numberOfMonths;
-            }
-
-            @Override
-            public ChronoUnit unit() {
-                return ChronoUnit.MONTHS;
-            }
-        };
+        return new ChronoAmount(ChronoUnit.MONTHS, numberOfMonths);
     }
 }

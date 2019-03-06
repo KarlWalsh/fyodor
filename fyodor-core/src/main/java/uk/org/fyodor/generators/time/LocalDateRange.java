@@ -68,21 +68,21 @@ public final class LocalDateRange extends Range<LocalDate> {
         final ChronoAmount lowerBound = range.lowerBound();
         final ChronoAmount upperBound = range.upperBound();
 
-        final LocalDate latestDate = lowerBound.unit().addTo(today, Math.negateExact(lowerBound.amount()));
-        final LocalDate earliestDate = upperBound.unit().addTo(today, Math.negateExact(upperBound.amount()));
+        final LocalDate latestDate = lowerBound.subtractFrom(today);
+        final LocalDate earliestDate = upperBound.subtractFrom(today);
 
         return new LocalDateRange(earliestDate, latestDate);
     }
 
     private static void validateAgeRangeAgainst(final Range<? extends ChronoAmount> range, final LocalDate today) {
         try {
-            today.minus(range.lowerBound().amount(), range.lowerBound().unit());
+            range.lowerBound().subtractFrom(today);
         } catch (final DateTimeException dte) {
             throw new IllegalArgumentException("Date range cannot be earlier than the minimum date");
         }
 
         try {
-            today.minus(range.upperBound().amount(), range.upperBound().unit());
+            range.upperBound().subtractFrom(today);
         } catch (final DateTimeException dte) {
             throw new IllegalArgumentException("Date range cannot be earlier than the minimum date");
         }
