@@ -1,4 +1,4 @@
-package uk.org.fyodor.jodatime.generators;
+package uk.org.fyodor.jodatime.test;
 
 import org.joda.time.LocalDate;
 import org.junit.Test;
@@ -8,9 +8,9 @@ import static org.joda.time.Days.days;
 import static org.joda.time.LocalDate.now;
 import static org.joda.time.Months.months;
 import static org.joda.time.Years.years;
-import static uk.org.fyodor.jodatime.generators.JodaTimeAssertions.assertThat;
+import static uk.org.fyodor.jodatime.test.JodaTimeAssertions.assertThat;
 import static uk.org.fyodor.jodatime.generators.RDG.localDate;
-import static uk.org.fyodor.jodatime.generators.Sampler.*;
+import static uk.org.fyodor.jodatime.test.Sampler.*;
 import static uk.org.fyodor.jodatime.range.LocalDateRange.*;
 
 public final class LocalDateGeneratorTest {

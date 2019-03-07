@@ -1,4 +1,4 @@
-package uk.org.fyodor.jodatime.generators;
+package uk.org.fyodor.jodatime.test;
 
 import org.assertj.core.api.AbstractAssert;
 import org.joda.time.LocalDate;
