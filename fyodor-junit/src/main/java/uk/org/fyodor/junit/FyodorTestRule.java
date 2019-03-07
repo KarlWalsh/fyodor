@@ -19,8 +19,4 @@ public final class FyodorTestRule implements TestRule {
     public Statement apply(final Statement base, final Description description) {
         return delegate.apply(base, description);
     }
-
-    public static FyodorTestRule fyodorTestRule() {
-        return new FyodorTestRule();
-    }
 }

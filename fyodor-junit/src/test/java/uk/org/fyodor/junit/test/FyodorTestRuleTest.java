@@ -1,22 +1,19 @@
-package uk.org.fyodor.junit;
+package uk.org.fyodor.junit.test;
 
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import uk.org.fyodor.junit.FyodorTestRule;
 import uk.org.fyodor.random.RandomSourceProvider;
 import uk.org.fyodor.testapi.FailedWithSeed;
 import uk.org.fyodor.testapi.Seed;
 
 import java.lang.annotation.Annotation;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.runner.Description.createTestDescription;
-import static uk.org.fyodor.junit.FyodorTestRule.fyodorTestRule;
 
 public final class FyodorTestRuleTest {
 
@@ -26,7 +23,7 @@ public final class FyodorTestRuleTest {
     public void methodAnnotatedWithSeed() throws Throwable {
         final long initialSeed = RandomSourceProvider.seed().current();
 
-        fyodorTestRule()
+        new FyodorTestRule()
                 .apply(capturingSeed, test(annotatedWith(seed(56789L))))
                 .evaluate();
 
@@ -38,7 +35,7 @@ public final class FyodorTestRuleTest {
     public void classAnnotatedWithSeed() throws Throwable {
         final long initialSeed = RandomSourceProvider.seed().current();
 
-        fyodorTestRule()
+        new FyodorTestRule()
                 .apply(capturingSeed, test(SeededTestClass.class))
                 .evaluate();
 
@@ -48,7 +45,7 @@ public final class FyodorTestRuleTest {
 
     @Test
     public void methodLevelSeedAnnotationOverridesClassLevelSeedAnnotation() throws Throwable {
-        fyodorTestRule()
+        new FyodorTestRule()
                 .apply(capturingSeed, test(SeededTestClass.class, annotatedWith(seed(123456L))))
                 .evaluate();
 
@@ -59,7 +56,7 @@ public final class FyodorTestRuleTest {
     public void doesNotSetNextSeedWhenTheTestDoesNotHaveAnAnnotatedSeedValue() throws Throwable {
         final long initialSeed = RandomSourceProvider.seed().current();
 
-        fyodorTestRule()
+        new FyodorTestRule()
                 .apply(capturingSeed, test())
                 .evaluate();
 
@@ -75,7 +72,7 @@ public final class FyodorTestRuleTest {
         final Exception exceptionCausingTestToFail = new IllegalArgumentException("this is the top-level exception", originalException);
 
         try {
-            fyodorTestRule()
+            new FyodorTestRule()
                     .apply(failingTest(() -> exceptionCausingTestToFail), test())
                     .evaluate();
 
@@ -90,7 +87,7 @@ public final class FyodorTestRuleTest {
     public void revertsToPreviousSeedWhenTestFinishes() throws Throwable {
         final long initialSeed = RandomSourceProvider.seed().current();
 
-        fyodorTestRule()
+        new FyodorTestRule()
                 .apply(capturingSeed, test(annotatedWith(seed(567123L))))
                 .evaluate();
 
@@ -105,7 +102,7 @@ public final class FyodorTestRuleTest {
         RandomSourceProvider.seed().next(firstSeed);
         RandomSourceProvider.seed().next(secondSeed);
 
-        fyodorTestRule()
+        new FyodorTestRule()
                 .apply(capturingSeed, test())
                 .evaluate();
 

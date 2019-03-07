@@ -1,4 +1,4 @@
-package uk.org.fyodor.junit;
+package uk.org.fyodor.junit.test;
 
 import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;

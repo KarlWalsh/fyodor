@@ -1,19 +1,19 @@
-package uk.org.fyodor.junit;
+package uk.org.fyodor.junit.test;
 
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
+import uk.org.fyodor.junit.FyodorTestRule;
 import uk.org.fyodor.testapi.FailedWithSeed;
 import uk.org.fyodor.testapi.Seed;
 
 import static org.junit.Assert.fail;
-import static uk.org.fyodor.junit.FyodorTestRule.fyodorTestRule;
-import static uk.org.fyodor.junit.ReportAssert.assertThat;
-import static uk.org.fyodor.junit.Reporter.reporter;
-import static uk.org.fyodor.junit.TestFailureListener.testFailed;
-import static uk.org.fyodor.junit.TestFinishedListener.testFinished;
-import static uk.org.fyodor.junit.TestStartedListener.testStarted;
+import static uk.org.fyodor.junit.test.ReportAssert.assertThat;
+import static uk.org.fyodor.junit.test.Reporter.reporter;
+import static uk.org.fyodor.junit.test.TestFailureListener.testFailed;
+import static uk.org.fyodor.junit.test.TestFinishedListener.testFinished;
+import static uk.org.fyodor.junit.test.TestStartedListener.testStarted;
 import static uk.org.fyodor.random.RandomSourceProvider.seed;
 
 public final class ConcurrentSeedTest {
@@ -70,7 +70,7 @@ public final class ConcurrentSeedTest {
     public static final class SeededTestClass {
 
         @Rule
-        public final FyodorTestRule rule = fyodorTestRule();
+        public final FyodorTestRule rule = new FyodorTestRule();
 
         @Rule
         public final TestName testName = new TestName();
@@ -92,7 +92,7 @@ public final class ConcurrentSeedTest {
     public static final class SeededTestClassWithSeededTestMethods {
 
         @Rule
-        public final FyodorTestRule rule = fyodorTestRule();
+        public final FyodorTestRule rule = new FyodorTestRule();
 
         @Rule
         public final TestName testName = new TestName();
@@ -115,7 +115,7 @@ public final class ConcurrentSeedTest {
     public static final class TestClassWithSeededTestMethods {
 
         @Rule
-        public final FyodorTestRule rule = fyodorTestRule();
+        public final FyodorTestRule rule = new FyodorTestRule();
 
         @Rule
         public final TestName testName = new TestName();

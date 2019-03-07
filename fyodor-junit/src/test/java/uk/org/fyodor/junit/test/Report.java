@@ -1,4 +1,4 @@
-package uk.org.fyodor.junit;
+package uk.org.fyodor.junit.test;
 
 final class Report<T> {
 

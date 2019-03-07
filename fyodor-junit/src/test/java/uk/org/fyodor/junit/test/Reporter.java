@@ -1,4 +1,4 @@
-package uk.org.fyodor.junit;
+package uk.org.fyodor.junit.test;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

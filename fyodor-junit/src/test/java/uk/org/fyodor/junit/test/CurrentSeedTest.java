@@ -1,24 +1,22 @@
-package uk.org.fyodor.junit;
+package uk.org.fyodor.junit.test;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
+import uk.org.fyodor.junit.FyodorTestRule;
 import uk.org.fyodor.testapi.FailedWithSeed;
 import uk.org.fyodor.testapi.Seed;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static uk.org.fyodor.junit.FyodorTestRule.fyodorTestRule;
-import static uk.org.fyodor.junit.ReportAssert.assertThat;
-import static uk.org.fyodor.junit.Reporter.reporter;
-import static uk.org.fyodor.junit.TestFailureListener.testFailed;
-import static uk.org.fyodor.junit.TestFinishedListener.testFinished;
-import static uk.org.fyodor.junit.TestStartedListener.testStarted;
+import static uk.org.fyodor.junit.test.ReportAssert.assertThat;
+import static uk.org.fyodor.junit.test.Reporter.reporter;
+import static uk.org.fyodor.junit.test.TestFailureListener.testFailed;
+import static uk.org.fyodor.junit.test.TestFinishedListener.testFinished;
+import static uk.org.fyodor.junit.test.TestStartedListener.testStarted;
 import static uk.org.fyodor.random.RandomSourceProvider.seed;
 
-@SuppressWarnings("ConstantConditions")
 public final class CurrentSeedTest {
 
     private static final Reporter<Long> reporter = reporter();
@@ -29,7 +27,7 @@ public final class CurrentSeedTest {
             testFinished(reporter, () -> seed().current()));
 
     @Test
-    public void setsTheSeedBeforeEachTestMethodAndThenResetsTheSeedAfterEachTestMethod() throws NoSuchMethodException {
+    public void setsTheSeedBeforeEachTestMethodAndThenResetsTheSeedAfterEachTestMethod() {
         final long initialSeed = new Random().nextLong();
 
         testRunner.scheduleTestWithObject(SeededTestClass.class, initialSeed, seed -> seed().next(seed)).run();
@@ -105,7 +103,7 @@ public final class CurrentSeedTest {
     public static final class SeededTestClass {
 
         @Rule
-        public final FyodorTestRule rule = fyodorTestRule();
+        public final FyodorTestRule rule = new FyodorTestRule();
 
         @Rule
         public final TestName testName = new TestName();
@@ -126,7 +124,7 @@ public final class CurrentSeedTest {
     public static final class SeededTestClassWithSeededTestMethods {
 
         @Rule
-        public final FyodorTestRule rule = fyodorTestRule();
+        public final FyodorTestRule rule = new FyodorTestRule();
 
         @Rule
         public final TestName testName = new TestName();
@@ -148,7 +146,7 @@ public final class CurrentSeedTest {
     public static final class TestClassWithSeededTestMethods {
 
         @Rule
-        public final FyodorTestRule rule = fyodorTestRule();
+        public final FyodorTestRule rule = new FyodorTestRule();
 
         @Rule
         public final TestName testName = new TestName();
@@ -170,7 +168,7 @@ public final class CurrentSeedTest {
     public static final class NonSeededTestClass {
 
         @Rule
-        public final FyodorTestRule rule = fyodorTestRule();
+        public final FyodorTestRule rule = new FyodorTestRule();
 
         @Rule
         public final TestName testName = new TestName();
