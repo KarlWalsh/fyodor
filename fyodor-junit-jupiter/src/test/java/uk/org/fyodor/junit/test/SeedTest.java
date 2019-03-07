@@ -1,16 +1,17 @@
-package uk.org.fyodor.junit;
+package uk.org.fyodor.junit.test;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
-import uk.org.fyodor.junit.TestRunner.TestRunReport;
+import uk.org.fyodor.junit.ExtendWithFyodor;
+import uk.org.fyodor.junit.test.TestRunner.TestRunReport;
 import uk.org.fyodor.testapi.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 import static uk.org.fyodor.generators.RDG.longVal;
-import static uk.org.fyodor.junit.TestRunner.runnerFor;
+import static uk.org.fyodor.junit.test.TestRunner.runnerFor;
 import static uk.org.fyodor.random.RandomSourceProvider.seed;
 
 final class SeedTest {

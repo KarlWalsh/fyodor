@@ -1,4 +1,4 @@
-package uk.org.fyodor.junit;
+package uk.org.fyodor.junit.test;
 
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.Description;

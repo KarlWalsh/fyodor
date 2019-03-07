@@ -1,9 +1,10 @@
-package uk.org.fyodor.junit;
+package uk.org.fyodor.junit.test;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import uk.org.fyodor.junit.ExtendWithFyodor;
 import uk.org.fyodor.testapi.CurrentSeed;
 import uk.org.fyodor.testapi.Seed;
 
