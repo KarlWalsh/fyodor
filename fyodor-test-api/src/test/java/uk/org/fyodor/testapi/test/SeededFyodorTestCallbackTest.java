@@ -1,6 +1,10 @@
-package uk.org.fyodor.testapi;
+package uk.org.fyodor.testapi.test;
 
 import org.junit.Test;
+import uk.org.fyodor.testapi.FailedWithSeed;
+import uk.org.fyodor.testapi.FyodorTest;
+import uk.org.fyodor.testapi.Seed;
+import uk.org.fyodor.testapi.SeededFyodorTestCallback;
 import uk.org.fyodor.testapi.SeededFyodorTestCallback.SeedController;
 
 import java.lang.annotation.Annotation;
@@ -8,7 +12,7 @@ import java.lang.annotation.Annotation;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import static uk.org.fyodor.generators.RDG.longVal;
-import static uk.org.fyodor.testapi.FyodorTestBuilder.fyodorTest;
+import static uk.org.fyodor.testapi.test.FyodorTestBuilder.fyodorTest;
 
 public final class SeededFyodorTestCallbackTest {
 

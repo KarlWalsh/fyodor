@@ -1,4 +1,7 @@
-package uk.org.fyodor.testapi;
+package uk.org.fyodor.testapi.test;
+
+import uk.org.fyodor.testapi.Annotatable;
+import uk.org.fyodor.testapi.FyodorTest;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
